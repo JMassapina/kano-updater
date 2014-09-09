@@ -162,8 +162,7 @@ class PostUpdate(Scenarios):
         install('kano-widgets')
 
     def beta_110_to_beta_111(self):
-        # disable cgroups init script which is installed by Epiphany.
-        run_cmd_log("/usr/bin/file /tmp/cgroup-bins > /dev/null && /usr/sbin/update-rc.d -f cgroup-bin disable")
+        self._disable_cgroup()
 
         install('kano-sound-files kano-init-flow')
         # Create first boot file so we don't annoy existent users
@@ -175,13 +174,17 @@ class PostUpdate(Scenarios):
             pass
 
     def beta_111_to_beta_120(self):
-        run_cmd_log("/usr/bin/file /tmp/cgroup-bins > /dev/null && /usr/sbin/update-rc.d -f cgroup-bin disable")
+        self._disable_cgroup()
         run_cmd_log("kano-apps install --no-gui painter epdfview geany codecademy calculator leafpad vnc")
 
     def beta_120_to_beta_121(self):
-        run_cmd_log("/usr/bin/file /tmp/cgroup-bins > /dev/null && /usr/sbin/update-rc.d -f cgroup-bin disable")
+        self._disable_cgroup()
         install('espeak')
 
     def beta_121_to_beta_122(self):
-        run_cmd_log("/usr/bin/file /tmp/cgroup-bins > /dev/null && /usr/sbin/update-rc.d -f cgroup-bin disable")
+        self._disable_cgroup()
         run_cmd_log("kano-apps install --no-gui --icon-only xbmc")
+
+    def _disable_cgroup(self):
+        # disable cgroups init script which is installed by Epiphany.
+        run_cmd_log("/usr/bin/file /etc/init.d/cgroup-bin > /dev/null && /usr/sbin/update-rc.d -f cgroup-bin disable")
